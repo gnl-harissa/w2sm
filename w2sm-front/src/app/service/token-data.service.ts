@@ -14,6 +14,10 @@ export class NexaTokenData implements TokenDataProcess
 
   }
 
+  downloadDataToken(token: string): any {
+    return this.http.get("/api/"+token, {responseType: 'json'}).toPromise();
+  }
+
   downloadData(): any {
     return this.http.get("/api/Nexa2", {responseType: 'json'}).toPromise();
   }

@@ -35,32 +35,27 @@ app.listen(8080, () => {
   });
 
 app.get('/api/Nexa', async (req,res) => {
-   let blockTime = 120
-   let subsidy = 10000000
-
-   let response = await axios.get("https://explorer.nexa.org/");
-   let regexpTestAgainst = /Chain Work<\/span><\/th><td class="text-right text-monospace"><span class="border-dotted" data-toggle="tooltip" title="hex: (.)+"><span>([0-9]*[.]?[0-9]+)<\/span>/ ///Chain Work(.)+><span>([0-9]*[.]?[0-9]+)<\/span>/
-   let matchResult = response.data.match(regexpTestAgainst);
-   let NetworkHashRate = parseFloat(matchResult[2]) * 1* Math.pow(10,12);
-
-   res.json({Hn :NetworkHashRate, subsidy: subsidy, blockTime:blockTime});
-});
-
-app.get('/api/Nexa2', async (req,res) => {
   let blockTime = 120
 
-  let response = await axios.get("https://pool.rplant.xyz/api/dash");
+  let response = await axios.get("https://pool.rplant.xyz/api/dash?t="+new Date().getTime());
   let subsidy = response.data.tbs.nexa.r ;
   let NetworkHashRate = response.data.tbs.nexa.hrN;
-  let fee = response.data.tbs.nexa.info.fee;
+  let fee = 0;
+  try 
+  { 
+    fee = parseFloat(response.data.tbs.nexa.info.fee.replace("%", ""));
+  }catch(e)
+  {
+
+  }
 
   res.json({Hn :NetworkHashRate, subsidy: subsidy, blockTime:blockTime, fee:fee});
 });
 
-app.get('/api/Rxd2', async (req,res) => {
+app.get('/api/Rxd', async (req,res) => {
   let blockTime = 300
 
-  let response = await axios.get("https://pool.rplant.xyz/api/dash");
+  let response = await axios.get("https://pool.rplant.xyz/api/dash?t="+new Date().getTime());
   let subsidy = response.data.tbs.radiant.r ;
   let NetworkHashRate = response.data.tbs.radiant.hrN;
   let fee = parseFloat(response.data.tbs.radiant.info.fee.replace("%", ""));
@@ -71,7 +66,7 @@ app.get('/api/Rxd2', async (req,res) => {
 app.get('/api/Rtm', async (req,res) => {
   let blockTime = 120
 
-  let response = await axios.get("https://pool.rplant.xyz/api/dash");
+  let response = await axios.get("https://pool.rplant.xyz/api/dash?t="+new Date().getTime());
   let subsidy = response.data.tbs.raptoreum.r ;
   let NetworkHashRate = response.data.tbs.raptoreum.hrN;
   let fee = parseFloat(response.data.tbs.raptoreum.info.fee.replace("%", ""));
@@ -82,7 +77,7 @@ app.get('/api/Rtm', async (req,res) => {
 app.get('/api/Novo', async (req,res) => {
   let blockTime = 150
 
-  let response = await axios.get("https://novopool.net/v1/pool/global-stats");
+  let response = await axios.get("https://novopool.net/v1/pool/global-stats?t="+new Date().getTime());
   let subsidy = 2000000;
   let NetworkHashRate = response.data.data.hashrate;
   let fee = 4;
@@ -90,15 +85,40 @@ app.get('/api/Novo', async (req,res) => {
   res.json({Hn :NetworkHashRate, subsidy: subsidy, blockTime:blockTime, fee:fee});
 });
 
-app.get('/api/Rxd', async (req,res) => {
-  let blockTime = 300
-  let subsidy = 50000
+app.get('/api/Ergo', async (req,res) => {
+  let blockTime = 150
 
-  let response = await axios.get("https://radiantexplorer.com/ext/getsummary/");
+  let response = await axios.get("https://api.ergoplatform.com/info?t="+new Date().getTime());
+  let subsidy = 42;
+  let NetworkHashRate = response.data.hashRate;
+  let fee = 1;
 
-  let NetworkHashRate = parseFloat(response.data.hashrate) * 1* Math.pow(10,9);
+  res.json({Hn :NetworkHashRate, subsidy: subsidy, blockTime:blockTime, fee:fee});
+});
 
-  res.json({Hn :NetworkHashRate, subsidy: subsidy, blockTime:blockTime});
+app.get('/api/Kaspa', async (req,res) => {
+  let blockTime = 1
+
+  let response = await axios.get("https://api.woolypooly.com/api/kas-1/stats?simple=false&t="+new Date().getTime());
+  let subsidy = response.data.blockReward;
+  let NetworkHashRate = response.data.netHashrate;
+  let fee = response.data.fee;
+
+  res.json({Hn :NetworkHashRate, subsidy: subsidy, blockTime:blockTime, fee:fee});
+});
+
+app.get('/api/Flux', async (req,res) => {
+
+
+  let response = await axios.get("https://api-flux.fluxpools.net/api/config?t="+new Date().getTime());
+  let blockTime = response.data.coin.coinInfo.blockTime;
+  let subsidy = response.data.coin.coinInfo.blockReward;
+
+  let fee = response.data.fee;
+  response = await axios.get("https://api-flux.fluxpools.net/api/dashboard?t="+new Date().getTime());
+  let NetworkHashRate = response.data.poolStats.networkSols;
+
+  res.json({Hn :NetworkHashRate, subsidy: subsidy, blockTime:blockTime, fee:fee});
 });
 
 

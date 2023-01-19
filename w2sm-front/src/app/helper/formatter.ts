@@ -6,7 +6,7 @@ export class DataFormatter {
     static formatBytes(input:number, decimals:number = 2):string {
         if (!+input) return '0 Bytes'
     
-        const k = 1024
+        const k = 1000
         const dm = decimals < 0 ? 0 : decimals
         const sizes = ['Bytes', 'KH', 'MH', 'GH', 'TH', 'PH', 'EH', 'ZH', 'YH']
     

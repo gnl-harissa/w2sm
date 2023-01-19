@@ -14,7 +14,7 @@ export class W2smTabResultComponent implements OnInit {
 
   public Results : Array<any> = [];
   public HashRateUnits : Array<string> = ["MH/S","GH/S", "KH/S", "TH/S"];
-  public CoinTargets : Array<string> = ["NEXA", "RADIANT", "NOVO", "RTM"];
+  public CoinTargets : Array<string> = ["Nexa", "Rxd", "Novo", "Rtm", "Ergo","Flux","Kaspa"];
   public HashRates : Array<any> = [];
   public myHashRateUnit : string = "MH/S";
   public selectedCoin : string = "";
@@ -32,6 +32,11 @@ export class W2smTabResultComponent implements OnInit {
         let StorageVar:string | null = localStorage.getItem("hashrates");
         this.HashRates = JSON.parse(StorageVar == null ? "[]" : StorageVar.toString());
     }
+  }
+
+  clearHashRates(): void {
+      this.HashRates = [];
+      this.saveHashRate();
   }
 
   addHashRate() : void {
@@ -53,68 +58,33 @@ export class W2smTabResultComponent implements OnInit {
     }
     this.HashRates = this.HashRates.filter( h => h.symbol != this.selectedCoin);
     this.HashRates.push({symbol : this.selectedCoin, hashrate : targetHashRate});
+    this.saveHashRate();
+  }
+
+  saveHashRate() : void {
     localStorage.setItem("hashrates", JSON.stringify(this.HashRates));
   }
 
   updateData() : void {
     this.Results =[];
-    this.tokenService.downloadData().then((data:any) => {
-      
-      data.symbol = "NEXA";
 
-      let curHashrate: number = 0;
-      let targetHashRate = this.HashRates.find( h => h.symbol == data.symbol ).hashrate;
-      curHashrate = targetHashRate;
+    this.CoinTargets.forEach( async c => {
       
-      data.hashrate = data.Hn;
-      data.cpb = data.subsidy;
-      data.tpb = data.blockTime;
-      data.cpd = data.subsidy * (86400/data.blockTime) * (curHashrate / data.hashrate)* (1 - (data.fee/100));
-      data.hashrate = DataFormatter.formatBytes(data.Hn)
-      this.Results.push(data);
-    });
-    this.tokenService.downloadRxdData().then((data:any) => {
-      let curHashrate: number = 0
-      
-      data.symbol = "RADIANT";
-      let targetHashRate = this.HashRates.find( h => h.symbol == data.symbol ).hashrate;
-      curHashrate = targetHashRate;
+         await this.tokenService.downloadDataToken(c).then((data:any) => {
+            
+          data.symbol = c;
 
-      data.hashrate = data.Hn;
-      data.cpb = data.subsidy;
-      data.tpb = data.blockTime;
-      data.cpd = data.subsidy * (86400/data.blockTime) * (curHashrate / data.hashrate) * (1 - (data.fee/100));
-      data.hashrate = DataFormatter.formatBytes(data.Hn)
-
-      this.Results.push(data);
-    });
-    this.tokenService.downloadNovoData().then((data:any) => {
-      let curHashrate: number = 0
-      
-      data.symbol = "NOVO";
-      let targetHashRate = this.HashRates.find( h => h.symbol == data.symbol ).hashrate;
-      curHashrate = targetHashRate;
-
-      data.hashrate = data.Hn;
-      data.cpb = data.subsidy;
-      data.tpb = data.blockTime;
-      data.cpd = data.subsidy * (86400/data.blockTime) * (curHashrate / data.hashrate) * (1 - (data.fee/100));
-      data.hashrate = DataFormatter.formatBytes(data.Hn)
-      this.Results.push(data);
-    });
-    this.tokenService.downloadRtmData().then((data:any) => {
-      let curHashrate: number = 0
-      
-      data.symbol = "RTM";
-      let targetHashRate = this.HashRates.find( h => h.symbol == data.symbol ).hashrate;
-      curHashrate = targetHashRate;
-
-      data.hashrate = data.Hn;
-      data.cpb = data.subsidy;
-      data.tpb = data.blockTime;
-      data.cpd = data.subsidy * (86400/data.blockTime) * (curHashrate / data.hashrate) * (1 - (data.fee/100));
-      data.hashrate = DataFormatter.formatBytes(data.Hn)
-      this.Results.push(data);
+          let curHashrate: number = 0;
+          let targetHashRate = this.HashRates.find( h => h.symbol == data.symbol ).hashrate;
+          curHashrate = targetHashRate;
+          
+          data.hashrate = data.Hn;
+          data.cpb = data.subsidy;
+          data.tpb = data.blockTime;
+          data.cpd = data.subsidy * (86400/data.blockTime) * (curHashrate / data.hashrate)* (1 - (data.fee/100));
+          data.hashrate = DataFormatter.formatBytes(data.Hn)
+          this.Results.push(data);
+        });
     });
   }
 

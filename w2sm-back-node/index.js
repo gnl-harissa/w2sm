@@ -8,25 +8,6 @@ const fs = require('fs');
 var nodemailer = require('nodemailer');
 const axios = require('axios');
 
-const path = require('path');
-const { match } = require('assert');
-
-var transporter = nodemailer.createTransport({
-  host: "smtp.orange.fr",
-  port: 465,
-  auth: {
-    user: 'marwan.benrajeb@orange.fr',
-    pass: 'Orange82212.'
-  },
-  secure: true // upgrade later with STARTTLS
-});
-
-var mailOptions = {
-  from: 'marwan.benrajeb@orange.fr',
-  to: 'kamui94@gmail.com',
-  subject: 'Sending Email using Node.js'
-};
-
 app.use(express.json())
 app.use(cors())
 

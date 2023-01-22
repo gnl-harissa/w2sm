@@ -1,2 +1,10 @@
 **/node_modules/**
 **/.angular
+w2sm-back-node/package-lock.json
+w2sm-front/firebase.json
+w2sm-front/.firebaserc
+w2sm-back-node/functions
+w2sm-back-node/firebase.json
+w2sm-back-node/.firebaserc
+w2sm-back-node/index.html
+w2sm-back-node/404.html

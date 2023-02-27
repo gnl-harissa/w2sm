@@ -102,4 +102,22 @@ app.get('/api/Flux', async (req,res) => {
   res.json({Hn :NetworkHashRate, subsidy: subsidy, blockTime:blockTime, fee:fee});
 });
 
+app.get('/api/Dynex', async (req,res) => {
 
+
+  let response = await axios.get("https://ekapool.com/dnx-api/stats?t="+new Date().getTime());
+  let coinDiff = response.data.config.coinDifficultyTarget;
+  let networkDiff = response.data.network.difficulty;
+  let NetworkHashRate = networkDiff / coinDiff;
+
+  let blockTime = 120;//response.data.network.difficulty / response.data.pool.hashrate;
+  let subsidy = response.data.lastblock.reward;
+
+  subsidy = parseFloat((parseInt(subsidy || 0) / response.data.config.coinUnits).toFixed(2 || 4))
+  //let subsidy = response.data.lastblock.reward;
+
+  let fee = response.data.config.fee;
+
+  res.json({Hn :NetworkHashRate, subsidy: subsidy, blockTime:blockTime, fee:fee});
+});
+//

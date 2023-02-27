@@ -14,7 +14,7 @@ export class W2smTabResultComponent implements OnInit {
 
   public Results : Array<any> = [];
   public HashRateUnits : Array<string> = ["MH/S","GH/S", "KH/S", "TH/S"];
-  public CoinTargets : Array<string> = ["Nexa", "Rxd", "Novo", "Rtm", "Ergo","Flux","Kaspa"];
+  public CoinTargets : Array<string> = ["Nexa", "Rxd", "Novo", "Rtm", "Ergo","Flux","Kaspa", "Dynex"];
   public HashRates : Array<any> = [];
   public myHashRateUnit : string = "MH/S";
   public selectedCoin : string = "";
